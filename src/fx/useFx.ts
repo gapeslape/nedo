@@ -14,7 +14,7 @@ const q = <T extends Element = HTMLElement>(sel: string) => document.querySelect
 const all = <T extends Element = HTMLElement>(sel: string) => gsap.utils.toArray<T>(sel)
 const clamp01 = gsap.utils.clamp(0, 1)
 
-/* ---------------- Sky: colour, sun, clouds, birds, clock ---------------- */
+/* ---------------- Sky: colour, sun, clouds, birds ---------------- */
 
 function setupSky() {
   const root = document.documentElement
@@ -56,19 +56,11 @@ function setupSky() {
     .fromTo('.flock', { x: -220, y: () => window.innerHeight * 0.4 }, { x: () => window.innerWidth + 60, y: () => window.innerHeight * 0.1, ease: 'none', duration: 0.2 }, 0.06)
     .fromTo('.flock', { x: () => window.innerWidth + 60, y: () => window.innerHeight * 0.18 }, { x: -220, y: () => window.innerHeight * 0.32, ease: 'none', duration: 0.2, immediateRender: false }, 0.62)
 
-  const time = q('.clock-time')!
-  const label = q('.clock-label')!
-  const clock = q('.clock')!
-  const labels: [number, string][] = [[7.5, 'Sunrise'], [11, 'Morning'], [14, 'Midday'], [17, 'Afternoon'], [19.5, 'Golden hour'], [21, 'Sunset'], [99, 'Evening']]
   ScrollTrigger.create({
     ...page,
     onUpdate: (self) => {
-      const h = 6 + self.progress * 16.5
-      const mins = Math.floor((h % 1) * 60 / 5) * 5
-      time.textContent = `${String(Math.floor(h)).padStart(2, '0')}:${String(mins).padStart(2, '0')}`
-      label.textContent = `${labels.find(([until]) => h < until)![1]} at Nedo`
-      clock.classList.toggle('is-night', h >= 20.5)
-      root.classList.toggle('is-night', h >= 20.5)
+      // Night falls at the same scroll point the time-of-day clock used to reach 20:30
+      root.classList.toggle('is-night', 6 + self.progress * 16.5 >= 20.5)
     },
   })
 }

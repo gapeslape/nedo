@@ -31,24 +31,6 @@ main, .footer { overflow-x: clip; }
 .bird-wing { fill: none; stroke: #4a4036; stroke-width: 2.4; stroke-linecap: round; transform-box: fill-box; transform-origin: center; animation: flap 0.5s ease-in-out infinite alternate; }
 @keyframes flap { to { transform: scaleY(-0.55); } }
 
-/* ---------- Time-of-day clock ---------- */
-.clock {
-  position: fixed; left: 24px; bottom: 24px; z-index: 45; display: flex; align-items: center; gap: 10px;
-  padding: 9px 16px 9px 12px; border-radius: 999px; font-size: 0.85rem;
-  background: color-mix(in srgb, var(--sky) 80%, white); border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 8px 24px rgba(60, 40, 20, 0.12); backdrop-filter: blur(10px);
-  transition: background 0.6s, color 0.6s;
-}
-.clock-time { font-weight: 700; font-variant-numeric: tabular-nums; }
-.clock-label { color: var(--ink-soft); }
-.clock-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; transition: opacity 0.4s, transform 0.6s; }
-.clock-sun { background: #ffe08a; color: #b06a10; }
-.clock-moon { position: absolute; left: 12px; background: #2a3360; color: #fbefc9; opacity: 0; transform: rotate(-90deg); }
-.clock.is-night { background: #141e3a; color: #f3ecdf; border-color: rgba(255, 255, 255, 0.1); }
-.clock.is-night .clock-label { color: #b9b6cc; }
-.clock.is-night .clock-sun { opacity: 0; transform: rotate(90deg); }
-.clock.is-night .clock-moon { opacity: 1; transform: none; }
-
 /* ---------- Hero hills ---------- */
 .hero-hills { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 240px; z-index: 1; pointer-events: none; }
 .hill-front { fill: var(--sky); }
@@ -110,7 +92,7 @@ main, .footer { overflow-x: clip; }
 .cat-eye { transform-box: fill-box; transform-origin: center; animation: blinkEye 4.5s infinite; }
 @keyframes blinkEye { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
 
-/* Nav follows the clock into the night */
+/* Nav follows the sky into the night */
 .nav { transition: background 0.6s, color 0.6s, box-shadow 0.3s; }
 .is-night .nav-solid { background: rgba(14, 22, 44, 0.82); color: #f3ecdf; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06); }
 
@@ -119,9 +101,6 @@ main, .footer { overflow-x: clip; }
   .sun { width: 110px; height: 110px; left: -55px; top: -55px; }
   .sun-rays { inset: -90px; }
   .cloud { max-width: 32vw; }
-  .clock { left: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); padding: 6px 12px 6px 8px; font-size: 0.78rem; gap: 8px; }
-  .clock-icon { width: 22px; height: 22px; }
-  .clock-moon { left: 8px; }
   .hero-hills { height: 150px; }
   .hero-content { padding-bottom: 150px; }
   .vine { inset: -14px auto auto -14px; width: calc(100% + 20px); height: auto; aspect-ratio: 1; }
@@ -137,10 +116,4 @@ main, .footer { overflow-x: clip; }
 /* Single-column layout: the wall moves between the host card and the house rules */
 @media (max-width: 900px) {
   .host-rules .wall { position: relative; transform: none; width: 100vw; margin: 40px 0 0 calc(50% - 50vw); }
-}
-@media (min-width: 901px) and (max-width: 1023px) {
-  .clock { bottom: 20px; }
-}
-@media (max-width: 640px) {
-  .clock-label { display: none; }
 }
