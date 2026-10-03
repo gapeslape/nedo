@@ -34,17 +34,15 @@ function setupSky() {
   const dusk = q('.sun-dusk')!
   const sunClip = q('.sun-clip')!
   const wall = q('.wall')
-  const state = { p: 0 }
+  const state = { p: 0, set: 0 }
   const wallTop = () => (wall ? wall.getBoundingClientRect().top + 6 : window.innerHeight)
   const placeSun = () => {
     const p = state.p
     const vh = window.innerHeight
     let y = (0.9 - Math.sin(Math.PI * p) * 0.76) * vh
-    // Once the cat's stone wall comes into view it becomes the horizon: the sun rides up with it
-    // while slowly sinking behind it, fully gone by the time the wall is 40% down the screen.
+    // Once the cat's stone wall comes into view it becomes the horizon and the sun sets behind it.
     const top = wallTop()
-    const set = clamp01((vh - top) / (vh * 0.6))
-    if (set > 0) y = top + gsap.utils.interpolate(-0.1 * vh, sun.offsetHeight * 0.75, set)
+    if (state.set > 0) y = gsap.utils.interpolate(y, top + sun.offsetHeight * 0.8, state.set)
     gsap.set(sun, { x: (0.07 + 0.84 * p) * window.innerWidth, y, scale: 1 + Math.max(0, p - 0.7) * 1.1 })
     gsap.set(dusk, { opacity: clamp01((p - 0.6) / 0.3) })
     // Nothing of the sun is drawn below the wall's top edge, so it can't show beneath or through it.
@@ -58,6 +56,15 @@ function setupSky() {
     ease: 'none',
     onUpdate: placeSun,
     scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.section-wall', end: 'top bottom', scrub: 0.8 },
+  })
+  // Setting plays on its own once the wall is in view (and rises again when scrolling back up),
+  // so the sun never hangs half-set above the wall when you stop or change direction.
+  gsap.to(state, {
+    set: 1,
+    duration: 1.6,
+    ease: 'power2.in',
+    onUpdate: placeSun,
+    scrollTrigger: { trigger: '.section-wall', start: 'top bottom', toggleActions: 'play none none reverse' },
   })
 
   all('.cloud').forEach((c) => {
