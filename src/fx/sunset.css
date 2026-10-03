@@ -4,11 +4,11 @@
 .sunset-stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #111a34; }
 .sunset-layer { position: absolute; inset: 0; }
 
-.sky-golden { background: linear-gradient(180deg, #eeb488 0%, #f6c993 40%, #ffdfa8 64%, #ffdfa8 100%); opacity: 0; }
+.sky-golden { background: linear-gradient(180deg, var(--sky) 0%, #f2cba6 36%, #f7dcb4 64%, #f7dcb4 100%); opacity: 0; }
 .sky-vivid {
-  background: linear-gradient(180deg, #2a1850 0%, #5e2170 16%, #b02c6e 32%, #ec4a55 46%, #ff7a36 55%, #ffb347 61%, #ffd36e 64%, #ffd36e 100%);
+  background: linear-gradient(180deg, #4b4560 0%, #765a6e 18%, #a9706f 34%, #cf8c6f 47%, #e3a77b 56%, #efc290 61%, #f5d3a3 64%, #f5d3a3 100%);
 }
-.sky-dusk { background: linear-gradient(180deg, #0c1230 0%, #221a4e 28%, #4f2264 46%, #9a345f 57%, #d65f4b 64%, #d65f4b 100%); opacity: 0; }
+.sky-dusk { background: linear-gradient(180deg, #161d3a 0%, #2b2c4c 30%, #4d4260 47%, #7d5d68 57%, #a8786c 64%, #a8786c 100%); opacity: 0; }
 .sky-night { background: linear-gradient(180deg, #080d20 0%, #0e1630 40%, #111a34 100%); opacity: 0; }
 
 /* Sun, clipped at the horizon so it really goes under the sea */
@@ -16,26 +16,26 @@
 .sunset-sun { position: absolute; left: 50%; top: calc(100% - 120px); width: 200px; height: 200px; margin-left: -100px; will-change: transform; }
 .sunset-sun-glow {
   position: absolute; inset: -220px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 214, 140, 0.75) 0%, rgba(255, 140, 80, 0.35) 30%, rgba(255, 90, 90, 0.12) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 224, 170, 0.6) 0%, rgba(236, 160, 110, 0.26) 30%, rgba(210, 120, 100, 0.08) 50%, transparent 70%);
 }
 .sunset-sun-core {
   position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(circle at 50% 42%, #fffbe3 0%, #ffe08a 38%, #ffab3d 100%);
-  box-shadow: 0 0 60px 20px rgba(255, 190, 90, 0.55);
+  background: radial-gradient(circle at 50% 42%, #fff8e4 0%, #fbdc9c 40%, #efaa66 100%);
+  box-shadow: 0 0 60px 20px rgba(246, 196, 130, 0.45);
 }
 .sunset-sun-red {
-  background: radial-gradient(circle at 50% 42%, #ffe1b0 0%, #ff8a3c 45%, #e8383c 100%);
-  box-shadow: 0 0 80px 30px rgba(240, 90, 60, 0.55);
+  background: radial-gradient(circle at 50% 42%, #ffe6c4 0%, #eea06a 48%, #cf6f52 100%);
+  box-shadow: 0 0 80px 30px rgba(214, 120, 90, 0.4);
 }
 
 /* Sea */
 .sunset-sea { position: absolute; left: 0; right: 0; top: 64%; bottom: 0; overflow: hidden; }
-.sea-golden { background: linear-gradient(180deg, #e9b98c 0%, #8ea0a6 30%, #3f6f8c 70%, #2a5674 100%); opacity: 0; }
-.sea-vivid { background: linear-gradient(180deg, #ffb35a 0%, #f0605a 10%, #b8336c 30%, #6a2468 55%, #34184f 80%, #22143f 100%); }
-.sea-vivid::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(255, 236, 190, 0.85); filter: blur(1px); }
+.sea-golden { background: linear-gradient(180deg, #ecc9a4 0%, #aab2ad 28%, #6f8f9f 65%, #4d7088 100%); opacity: 0; }
+.sea-vivid { background: linear-gradient(180deg, #f1c595 0%, #dd9d79 10%, #b57871 30%, #7d5c6f 55%, #4f465f 80%, #383853 100%); }
+.sea-vivid::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(255, 238, 205, 0.6); filter: blur(1px); }
 .sea-night { background: #111a34; opacity: 0; }
 .sea-ripples {
-  position: absolute; inset: 0; opacity: 0.35; mix-blend-mode: soft-light;
+  position: absolute; inset: 0; opacity: 0.22; mix-blend-mode: soft-light;
   background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 1px, transparent 1px 9px);
   animation: ripple 5s linear infinite;
 }
@@ -44,12 +44,12 @@
 .sunset-reflection { position: absolute; left: 50%; top: 0; bottom: 0; width: 34%; margin-left: -17%; transform-origin: 50% 0; }
 .sunset-reflection span {
   position: absolute; left: 50%; height: 3px; border-radius: 3px; transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, rgba(255, 228, 160, 0.95), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 232, 190, 0.8), transparent);
   animation: glint 1.4s ease-in-out infinite alternate;
 }
 @keyframes glint { from { opacity: 0.25; transform: translateX(-50%) scaleX(0.7); } to { opacity: 1; transform: translateX(-50%) scaleX(1.1); } }
 
-.sunset-boat { position: absolute; left: 0; top: calc(64% - 54px); width: 64px; height: 53px; fill: #2a1534; will-change: transform; transform: translateX(22vw); }
+.sunset-boat { position: absolute; left: 0; top: calc(64% - 54px); width: 64px; height: 53px; fill: #3b3346; will-change: transform; transform: translateX(22vw); }
 .sunset-boat path { animation: bob 3s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 
 .sunset-stars { position: absolute; inset: 0; opacity: 0; }
@@ -63,9 +63,9 @@
 .sunset-copy { position: absolute; left: 0; right: 0; top: 17%; text-align: center; padding: 0 20px; pointer-events: none; }
 .sunset-line {
   margin: 0; font-family: var(--serif); font-size: clamp(1.8rem, 4.2vw, 3.6rem); line-height: 1.15; color: #fff8ec;
-  text-shadow: 0 2px 30px rgba(60, 10, 40, 0.45);
+  text-shadow: 0 2px 24px rgba(50, 35, 50, 0.35);
 }
-.sunset-line em { font-style: italic; color: #ffe1a8; }
+.sunset-line em { font-style: italic; color: #f9dcb4; }
 .sunset-line.line-2 { position: absolute; left: 0; right: 0; top: 0; padding: 0 20px; opacity: 0; }
 .sunset-line.line-2 em { color: #f6c98d; }
 

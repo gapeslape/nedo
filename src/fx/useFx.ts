@@ -32,13 +32,16 @@ function setupSky() {
 
   const sun = q('.sun')!
   const dusk = q('.sun-dusk')!
-  const state = { p: 0 }
+  // p: position along the day's arc. set: 0→1 as the sun goes down behind the hills after the stone
+  // wall, so it's gone before the sunset scene (which has its own sun) scrolls into view.
+  const state = { p: 0, set: 0 }
   const placeSun = () => {
     const p = state.p
     gsap.set(sun, {
       x: (0.07 + 0.84 * p) * window.innerWidth,
-      y: (0.9 - Math.sin(Math.PI * p) * 0.76) * window.innerHeight,
+      y: (0.9 - Math.sin(Math.PI * p) * 0.76 + state.set * 0.5) * window.innerHeight,
       scale: 1 + Math.max(0, p - 0.7) * 1.1,
+      opacity: 1 - state.set,
     })
     gsap.set(dusk, { opacity: clamp01((p - 0.6) / 0.3) })
   }
@@ -47,7 +50,13 @@ function setupSky() {
     p: 1,
     ease: 'none',
     onUpdate: placeSun,
-    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.sunset', end: 'top top', scrub: 0.8 },
+    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.section-wall', end: 'top 30%', scrub: 0.8 },
+  })
+  gsap.to(state, {
+    set: 1,
+    ease: 'power1.in',
+    onUpdate: placeSun,
+    scrollTrigger: { trigger: '.section-wall', start: 'top 30%', endTrigger: '.sunset', end: 'top bottom', scrub: 0.8 },
   })
 
   all('.cloud').forEach((c) => {
@@ -259,7 +268,7 @@ function setupSunset() {
   tl.fromTo(sun, { y: () => clip.offsetHeight * 0.06 }, { y: () => clip.offsetHeight - sunSize() * 0.95, duration: 0.4, ease: 'sine.in' }, 0)
     .to('.sky-vivid, .sea-vivid', { opacity: 1, duration: 0.3 }, 0.04)
     .to('.sunset-sun-red', { opacity: 1, duration: 0.3 }, 0.2)
-    .to('.line-1', { opacity: 1, y: 0, duration: 0.1 }, 0.06)
+    .to('.line-1', { opacity: 1, y: 0, duration: 0.1 }, 0.16)
     .fromTo('.sunset-boat', { x: () => window.innerWidth * 0.12 }, { x: () => window.innerWidth * 0.62, duration: 0.75 }, 0)
   // 2. The sun sinks into the sea; its reflection narrows and fades.
     .to(sun, { y: () => clip.offsetHeight + 30, duration: 0.18, ease: 'sine.inOut' }, 0.4)
