@@ -1,0 +1,142 @@
+/* Decorative scroll scenes — hidden for people who prefer reduced motion. */
+main, .footer { overflow-x: clip; }
+@media (prefers-reduced-motion: reduce) {
+  .fx { display: none !important; }
+}
+
+/* ---------- Sky layer ---------- */
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sun { position: absolute; left: -80px; top: -80px; width: 160px; height: 160px; will-change: transform; }
+.sun-core {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 42% 40%, #fffbe6 0%, #ffe08a 38%, #f8b84a 100%);
+  box-shadow: 0 0 60px 20px rgba(255, 196, 90, 0.45), 0 0 160px 80px rgba(255, 210, 120, 0.22);
+}
+.sun-dusk {
+  background: radial-gradient(circle at 42% 40%, #ffe3b0 0%, #f6904a 45%, #d8573a 100%);
+  box-shadow: 0 0 70px 24px rgba(240, 120, 70, 0.45), 0 0 200px 100px rgba(240, 140, 90, 0.25);
+  opacity: 0;
+}
+.sun-rays {
+  position: absolute; inset: -140px; border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255, 200, 90, 0.22) 0 5deg, transparent 5deg 15deg);
+  mask: radial-gradient(circle, #000 25%, transparent 68%);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%);
+  animation: spin 80s linear infinite;
+}
+.cloud { position: absolute; will-change: transform; }
+.cloud svg { width: 100%; display: block; fill: #fff; opacity: 0.85; filter: drop-shadow(0 6px 10px rgba(120, 90, 60, 0.08)); animation: cloudDrift 40s ease-in-out infinite alternate; }
+@keyframes cloudDrift { to { transform: translateX(-60px); } }
+.flock { position: absolute; left: 0; top: 0; will-change: transform; }
+.bird-wing { fill: none; stroke: #4a4036; stroke-width: 2.4; stroke-linecap: round; transform-box: fill-box; transform-origin: center; animation: flap 0.5s ease-in-out infinite alternate; }
+@keyframes flap { to { transform: scaleY(-0.55); } }
+
+/* ---------- Time-of-day clock ---------- */
+.clock {
+  position: fixed; left: 24px; bottom: 24px; z-index: 45; display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px 9px 12px; border-radius: 999px; font-size: 0.85rem;
+  background: color-mix(in srgb, var(--sky) 80%, white); border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(60, 40, 20, 0.12); backdrop-filter: blur(10px);
+  transition: background 0.6s, color 0.6s;
+}
+.clock-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.clock-label { color: var(--ink-soft); }
+.clock-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; transition: opacity 0.4s, transform 0.6s; }
+.clock-sun { background: #ffe08a; color: #b06a10; }
+.clock-moon { position: absolute; left: 12px; background: #2a3360; color: #fbefc9; opacity: 0; transform: rotate(-90deg); }
+.clock.is-night { background: #141e3a; color: #f3ecdf; border-color: rgba(255, 255, 255, 0.1); }
+.clock.is-night .clock-label { color: #b9b6cc; }
+.clock.is-night .clock-sun { opacity: 0; transform: rotate(90deg); }
+.clock.is-night .clock-moon { opacity: 1; transform: none; }
+
+/* ---------- Hero hills ---------- */
+.hero-hills { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 240px; z-index: 1; pointer-events: none; }
+.hill-front { fill: var(--sky); }
+.hero-content { z-index: 2; }
+@media (min-width: 1024px) {
+  .hero-content { padding-bottom: 210px; }
+  .facts { margin-top: -96px; }
+}
+
+/* ---------- Vine ---------- */
+.vine { position: absolute; inset: -20px -10px auto -36px; width: calc(100% + 46px); height: 600px; z-index: 2; pointer-events: none; overflow: visible; }
+.vine-stem { fill: none; stroke: #6b5636; stroke-width: 5; stroke-linecap: round; }
+.vine-tendril { fill: none; stroke: #7a8f45; stroke-width: 1.6; stroke-linecap: round; }
+
+/* ---------- Beach ---------- */
+.beach { position: relative; z-index: 1; height: 330px; margin-top: -40px; }
+.beach svg { display: block; width: 100%; height: 100%; }
+.wave { animation: waves 9s linear infinite; }
+.wave-front { animation-duration: 6s; animation-direction: reverse; }
+@keyframes waves { to { transform: translateX(-1440px); } }
+.boat-bob { animation: bob 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+@keyframes bob { 0%, 100% { transform: rotate(-3deg) translateY(0); } 50% { transform: rotate(3deg) translateY(3px); } }
+.dolphin { opacity: 0; }
+.splash { transform: scale(0); }
+
+/* ---------- Ride ---------- */
+.ride { position: relative; z-index: 1; height: 240px; margin-top: -1px; }
+.ride svg { display: block; width: 100%; height: 100%; }
+.ride-land { fill: var(--sky); }
+
+/* ---------- Road scene ---------- */
+.road-scene { margin-top: 56px; }
+.road-scene svg { display: block; width: 100%; height: auto; overflow: visible; }
+.scene-label { font: italic 500 15px var(--serif); fill: var(--ink); }
+.puff { animation: puff 3.6s ease-out infinite; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.puff:nth-child(2) { animation-delay: 1.2s; }
+.puff:nth-child(3) { animation-delay: 2.4s; }
+@keyframes puff {
+  0% { opacity: 0.8; transform: translate(0, 0) scale(0.6); }
+  100% { opacity: 0; transform: translate(14px, -46px) scale(2.2); }
+}
+
+/* ---------- Stone wall & cat ---------- */
+.section-wall { position: relative; }
+.wall { position: absolute; left: 0; right: 0; top: 0; height: 50px; transform: translateY(-50%); z-index: 2; }
+.wall-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cat { position: absolute; left: 0; bottom: 46px; width: 120px; will-change: transform; }
+.cat svg { display: block; transition: transform 0.25s; }
+.cat.facing-left svg { transform: scaleX(-1); }
+.leg { transform-box: fill-box; transform-origin: 50% 0; }
+.cat.walking .leg-a { animation: step 0.36s ease-in-out infinite alternate; }
+.cat.walking .leg-b { animation: step 0.36s ease-in-out infinite alternate-reverse; }
+@keyframes step { from { transform: rotate(24deg); } to { transform: rotate(-24deg); } }
+.tail { transform-box: fill-box; transform-origin: 100% 100%; animation: swish 2.4s ease-in-out infinite; }
+.cat.walking .tail { animation-duration: 0.8s; }
+@keyframes swish { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+.cat-head { transform-box: fill-box; transform-origin: 30% 80%; animation: nod 5s ease-in-out infinite; }
+@keyframes nod { 0%, 70%, 100% { transform: rotate(0); } 80% { transform: rotate(-10deg); } 90% { transform: rotate(4deg); } }
+.cat-eye { transform-box: fill-box; transform-origin: center; animation: blinkEye 4.5s infinite; }
+@keyframes blinkEye { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+
+/* Nav follows the clock into the night */
+.nav { transition: background 0.6s, color 0.6s, box-shadow 0.3s; }
+.is-night .nav-solid { background: rgba(14, 22, 44, 0.82); color: #f3ecdf; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06); }
+
+/* ---------- Tablets & phones ---------- */
+@media (max-width: 1023px) {
+  .sun { width: 110px; height: 110px; left: -55px; top: -55px; }
+  .sun-rays { inset: -90px; }
+  .cloud { max-width: 32vw; }
+  .clock { left: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); padding: 6px 12px 6px 8px; font-size: 0.78rem; gap: 8px; }
+  .clock-icon { width: 22px; height: 22px; }
+  .clock-moon { left: 8px; }
+  .hero-hills { height: 150px; }
+  .hero-content { padding-bottom: 150px; }
+  .vine { inset: -14px auto auto -14px; width: calc(100% + 20px); height: auto; aspect-ratio: 1; }
+  .beach { height: 220px; margin-top: -24px; }
+  .ride { height: 170px; }
+  .road-scene { margin-top: 36px; overflow: hidden; border-radius: 14px; }
+  .road-scene svg { height: 220px; width: auto; max-width: none; overflow: hidden; }
+  .cat { transform-origin: 0 100%; }
+  .cat svg { width: 96px; height: 59px; }
+  .wall { height: 40px; }
+  .cat { bottom: 36px; }
+}
+@media (min-width: 901px) and (max-width: 1023px) {
+  .clock { bottom: 20px; }
+}
+@media (max-width: 640px) {
+  .clock-label { display: none; }
+}
