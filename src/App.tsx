@@ -319,7 +319,6 @@ function Location() {
 function HostAndRules() {
   return (
     <section className="section section-wall">
-      <StoneWall />
       <div className="container host-rules">
         <div className="host card">
           <div className="host-top">
@@ -341,6 +340,8 @@ function HostAndRules() {
             <a href={`mailto:${config.bookingEmail}`} className="btn btn-ghost btn-sm"><Mail size={16} /> Email</a>
           </div>
         </div>
+        {/* Absolutely positioned at the section top on desktop; sits between host and rules on mobile */}
+        <StoneWall />
         <div>
           <p className="eyebrow">Things to know</p>
           <h2>House rules</h2>

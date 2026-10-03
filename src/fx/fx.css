@@ -134,6 +134,10 @@ main, .footer { overflow-x: clip; }
   .wall { height: 40px; }
   .cat { bottom: 36px; }
 }
+/* Single-column layout: the wall moves between the host card and the house rules */
+@media (max-width: 900px) {
+  .host-rules .wall { position: relative; transform: none; width: 100vw; margin: 40px 0 0 calc(50% - 50vw); }
+}
 @media (min-width: 901px) and (max-width: 1023px) {
   .clock { bottom: 20px; }
 }
