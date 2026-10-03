@@ -23,12 +23,10 @@ export function Sky() {
   return (
     <>
       <div className="fx sky" aria-hidden>
-        <div className="sun-clip">
-          <div className="sun">
-            <div className="sun-rays" />
-            <div className="sun-core" />
-            <div className="sun-core sun-dusk" />
-          </div>
+        <div className="sun">
+          <div className="sun-rays" />
+          <div className="sun-core" />
+          <div className="sun-core sun-dusk" />
         </div>
         {clouds.map((c, i) => (
           <div key={i} className="cloud" data-speed={c.speed} style={{ top: c.top, left: c.left, width: c.width }}>

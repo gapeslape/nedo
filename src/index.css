@@ -303,7 +303,7 @@ h2 em, h3 em { font-style: italic; color: var(--terracotta); }
 /* Night booking section */
 .section-night {
   position: relative; overflow: hidden; color: #f3ecdf; padding-bottom: 0;
-  background: linear-gradient(180deg, #111a34 0, #0f1830 100%);
+  background: linear-gradient(180deg, var(--sky) 0, #c98d86 70px, #6c5a86 150px, #2a3360 290px, #141e3a 620px, #0f1830 100%);
 }
 .section-night .night-content { position: relative; z-index: 2; padding-top: 80px; }
 .section-night .eyebrow { color: #f6c98d; }

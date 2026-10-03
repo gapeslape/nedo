@@ -6,8 +6,6 @@ import Lenis from 'lenis'
 import { setLenis } from './smooth'
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
-// Don't recalculate (and jump) when a phone's address bar shows or hides.
-ScrollTrigger.config({ ignoreMobileResize: true })
 
 /** Scroll effects run everywhere except for people who prefer reduced motion. */
 export const FX_QUERY = '(prefers-reduced-motion: no-preference)'
@@ -32,39 +30,22 @@ function setupSky() {
 
   const sun = q('.sun')!
   const dusk = q('.sun-dusk')!
-  const sunClip = q('.sun-clip')!
-  const wall = q('.wall')
-  const state = { p: 0, set: 0 }
-  const wallTop = () => (wall ? wall.getBoundingClientRect().top + 6 : window.innerHeight)
+  const state = { p: 0 }
   const placeSun = () => {
     const p = state.p
-    const vh = window.innerHeight
-    let y = (0.9 - Math.sin(Math.PI * p) * 0.76) * vh
-    // Once the cat's stone wall comes into view it becomes the horizon and the sun sets behind it.
-    const top = wallTop()
-    if (state.set > 0) y = gsap.utils.interpolate(y, top + sun.offsetHeight * 0.8, state.set)
-    gsap.set(sun, { x: (0.07 + 0.84 * p) * window.innerWidth, y, scale: 1 + Math.max(0, p - 0.7) * 1.1 })
+    gsap.set(sun, {
+      x: (0.07 + 0.84 * p) * window.innerWidth,
+      y: (0.9 - Math.sin(Math.PI * p) * 0.76) * window.innerHeight,
+      scale: 1 + Math.max(0, p - 0.7) * 1.1,
+    })
     gsap.set(dusk, { opacity: clamp01((p - 0.6) / 0.3) })
-    // Nothing of the sun is drawn below the wall's top edge, so it can't show beneath or through it.
-    const hidden = Math.min(vh, Math.max(0, vh - top))
-    sunClip.style.clipPath = `inset(0 0 ${hidden}px 0)`
   }
   placeSun()
-  ScrollTrigger.create({ ...page, onUpdate: placeSun, onRefresh: placeSun })
   gsap.to(state, {
     p: 1,
     ease: 'none',
     onUpdate: placeSun,
-    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.section-wall', end: 'top bottom', scrub: 0.8 },
-  })
-  // Setting plays on its own once the wall is in view (and rises again when scrolling back up),
-  // so the sun never hangs half-set above the wall when you stop or change direction.
-  gsap.to(state, {
-    set: 1,
-    duration: 1.6,
-    ease: 'power2.in',
-    onUpdate: placeSun,
-    scrollTrigger: { trigger: '.section-wall', start: 'top bottom', toggleActions: 'play none none reverse' },
+    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '#book', end: 'top 20%', scrub: 0.8 },
   })
 
   all('.cloud').forEach((c) => {
@@ -254,51 +235,11 @@ function setupCat() {
   return () => window.clearTimeout(timer)
 }
 
-/* ---------------- Sunset: the sun sinks into the sea, the sea becomes night sky ---------------- */
-
-function setupSunset() {
-  const stage = q('.sunset-stage')
-  if (!stage) return
-  const clip = q('.sunset-skyclip')!
-  const sun = q('.sunset-sun')!
-  const sunSize = () => sun.offsetHeight
-
-  gsap.set('.sky-golden, .sea-golden', { opacity: 1 })
-  gsap.set('.sky-vivid, .sea-vivid, .sky-dusk, .sky-night, .sea-night, .sunset-stars, .sunset-sun-red, .sunset-line', { opacity: 0 })
-  gsap.set(sun, { top: 0 })
-  gsap.set('.line-1', { y: 20 })
-
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: { trigger: '.sunset', start: 'top top', end: '+=220%', pin: true, scrub: 1, invalidateOnRefresh: true },
-  })
-  // 1. Golden hour turns into a vivid sunset while the sun comes down to the horizon.
-  tl.fromTo(sun, { y: () => clip.offsetHeight * 0.06 }, { y: () => clip.offsetHeight - sunSize() * 0.95, duration: 0.4, ease: 'sine.in' }, 0)
-    .to('.sky-vivid, .sea-vivid', { opacity: 1, duration: 0.3 }, 0.04)
-    .to('.sunset-sun-red', { opacity: 1, duration: 0.3 }, 0.2)
-    .to('.line-1', { opacity: 1, y: 0, duration: 0.1 }, 0.16)
-    .fromTo('.sunset-boat', { x: () => window.innerWidth * 0.12 }, { x: () => window.innerWidth * 0.62, duration: 0.75 }, 0)
-  // 2. The sun sinks into the sea; its reflection narrows and fades.
-    .to(sun, { y: () => clip.offsetHeight + 30, duration: 0.18, ease: 'sine.inOut' }, 0.4)
-    .to('.sunset-reflection', { scaleY: 0.25, scaleX: 0.4, opacity: 0, duration: 0.2 }, 0.42)
-  // 3. Afterglow, then darkness: the sea dissolves into the night sky and the stars come out.
-    .to('.sky-dusk', { opacity: 1, duration: 0.14 }, 0.54)
-    .to('.line-1', { opacity: 0, y: -20, duration: 0.08 }, 0.58)
-    .to('.sunset-boat', { opacity: 0, duration: 0.1 }, 0.66)
-    .to('.sea-ripples', { opacity: 0, duration: 0.12 }, 0.66)
-    .to('.sky-night', { opacity: 1, duration: 0.16 }, 0.68)
-    .to(sun, { opacity: 0, duration: 0.14 }, 0.66)
-    .to('.sea-night', { opacity: 1, duration: 0.18 }, 0.72)
-    .to('.sunset-fade-top', { opacity: 0, duration: 0.1 }, 0.6)
-    .to('.sunset-stars', { opacity: 1, duration: 0.14 }, 0.8)
-    .fromTo('.line-2', { y: 20 }, { opacity: 1, y: 0, duration: 0.08 }, 0.86)
-    .to({}, { duration: 0.06 })
-}
-
 /* ---------------- Night falls over the booking section ---------------- */
 
 function setupNight() {
   gsap.timeline({ scrollTrigger: { trigger: '#book', start: 'top bottom', end: 'top 10%', scrub: 1 } })
+    .from('.night-sky .night-stars', { opacity: 0, ease: 'none' }, 0)
     .from('.night-sky .moon', { y: 220, opacity: 0, ease: 'power1.out' }, 0)
   gsap.from('.window-light', {
     opacity: 0, stagger: 0.3, duration: 0.5,
@@ -328,7 +269,6 @@ export function useFx() {
       setupReviews()
       setupRoad()
       const stopCat = setupCat()
-      setupSunset()
       setupNight()
 
       let t = 0

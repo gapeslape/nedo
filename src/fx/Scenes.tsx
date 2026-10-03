@@ -342,7 +342,6 @@ export function StoneWall() {
   return (
     <div className="fx wall" aria-hidden>
       <svg className="wall-svg" viewBox="0 0 1440 50" preserveAspectRatio="none">
-        <rect x={0} y={7} width={1440} height={43} fill="#c4b18b" />
         {STONES.map((s, i) => <rect key={i} x={s.x} y={s.y} width={s.w} height={s.h} rx={6} fill={s.c} stroke="#bba982" strokeWidth={1} />)}
       </svg>
       <div className="cat">

@@ -11,7 +11,6 @@ import { formatDate, money } from './lib/booking'
 import { Sky } from './fx/Sky'
 import { Beach, HeroHills, NightHouse, NightSky, Ride, RoadScene, StoneWall, Vine } from './fx/Scenes'
 import { useFx } from './fx/useFx'
-import { Sunset } from './fx/Sunset'
 import { lockScroll } from './fx/smooth'
 
 const NAV = [
@@ -418,7 +417,6 @@ export default function App() {
         <Reviews />
         <Location />
         <HostAndRules />
-        <Sunset />
         <section className="section section-night" id="book">
           <NightSky />
           <div className="container night-content">
