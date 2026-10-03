@@ -6,6 +6,7 @@ main, .footer { overflow-x: clip; }
 
 /* ---------- Sky layer ---------- */
 .sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sun-clip { position: absolute; inset: 0; }
 .sun { position: absolute; left: -80px; top: -80px; width: 160px; height: 160px; will-change: transform; }
 .sun-core {
   position: absolute; inset: 0; border-radius: 50%;

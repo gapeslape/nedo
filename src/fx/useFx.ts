@@ -32,31 +32,32 @@ function setupSky() {
 
   const sun = q('.sun')!
   const dusk = q('.sun-dusk')!
-  // p: position along the day's arc. set: 0→1 as the sun goes down behind the hills after the stone
-  // wall, so it's gone before the sunset scene (which has its own sun) scrolls into view.
-  const state = { p: 0, set: 0 }
+  const sunClip = q('.sun-clip')!
+  const wall = q('.wall')
+  const state = { p: 0 }
+  const wallTop = () => (wall ? wall.getBoundingClientRect().top + 6 : window.innerHeight)
   const placeSun = () => {
     const p = state.p
-    gsap.set(sun, {
-      x: (0.07 + 0.84 * p) * window.innerWidth,
-      y: (0.9 - Math.sin(Math.PI * p) * 0.76 + state.set * 0.5) * window.innerHeight,
-      scale: 1 + Math.max(0, p - 0.7) * 1.1,
-      opacity: 1 - state.set,
-    })
+    const vh = window.innerHeight
+    let y = (0.9 - Math.sin(Math.PI * p) * 0.76) * vh
+    // Once the cat's stone wall comes into view it becomes the horizon: the sun rides up with it
+    // while slowly sinking behind it, fully gone by the time the wall is 40% down the screen.
+    const top = wallTop()
+    const set = clamp01((vh - top) / (vh * 0.6))
+    if (set > 0) y = top + gsap.utils.interpolate(-0.1 * vh, sun.offsetHeight * 0.75, set)
+    gsap.set(sun, { x: (0.07 + 0.84 * p) * window.innerWidth, y, scale: 1 + Math.max(0, p - 0.7) * 1.1 })
     gsap.set(dusk, { opacity: clamp01((p - 0.6) / 0.3) })
+    // Nothing of the sun is drawn below the wall's top edge, so it can't show beneath or through it.
+    const hidden = Math.min(vh, Math.max(0, vh - top))
+    sunClip.style.clipPath = `inset(0 0 ${hidden}px 0)`
   }
   placeSun()
+  ScrollTrigger.create({ ...page, onUpdate: placeSun, onRefresh: placeSun })
   gsap.to(state, {
     p: 1,
     ease: 'none',
     onUpdate: placeSun,
-    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.section-wall', end: 'top 30%', scrub: 0.8 },
-  })
-  gsap.to(state, {
-    set: 1,
-    ease: 'power1.in',
-    onUpdate: placeSun,
-    scrollTrigger: { trigger: '.section-wall', start: 'top 30%', endTrigger: '.sunset', end: 'top bottom', scrub: 0.8 },
+    scrollTrigger: { trigger: document.body, start: 'top top', endTrigger: '.section-wall', end: 'top bottom', scrub: 0.8 },
   })
 
   all('.cloud').forEach((c) => {
